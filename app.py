@@ -1,6 +1,7 @@
 from flask import Flask,request,render_template,redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from werkzeug.security import check_password_hash,generate_password_hash
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///user.db"
@@ -28,10 +29,12 @@ def register():
         Email = request.form['Email']
         Password = request.form['Password']
 
+        hash_password = generate_password_hash(Password)
+
         new_user = user(
             Username = Username,
             Email = Email,
-            Password = Password,
+            Password = hash_password
         )
 
         db.session.add(new_user)
